@@ -131,11 +131,10 @@ export default function Inbox({ userOnline }) {
           <List>
             {room.length !== 0
               ? room.map(({ _id, users, chats }) => {
-                const { text } = chats[chats.length - 1] ? chats[chats.length - 1] : "";
+                const {text}  = chats ? chats.pop(): "";
                 const userReceive = users.filter(
                   (user) => user._id !== isMe._id
                 );
-
                 return (
                   <React.Fragment key={_id}>
                     <ListItem
@@ -168,12 +167,12 @@ export default function Inbox({ userOnline }) {
                           )}
                       </ListItemAvatar>
                       <div
-                        className={notifications.indexOf(_id) < 0 ?
-                          classes.notifications :
-                          classes.notificationsOn}
+                       
                       >
                         <div>{userReceive[0] ? userReceive[0].name : ""} </div>
-                        <div>{text} </div>
+                        <div  className={notifications.indexOf(_id) < 0 ?
+                          classes.notifications :
+                          classes.notificationsOn}>{text} </div>
                       </div>
                     </ListItem>
                   </React.Fragment>

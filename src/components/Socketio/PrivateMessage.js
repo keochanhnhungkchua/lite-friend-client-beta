@@ -178,9 +178,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
     setOpenLightTooltip(false);
   };
   const handleTooltipOpen = (index) => {
-
     setOpenLightTooltip(index);
-    console.log(index)
   };
   //upload image
   const [images, setImages] = useState({});
@@ -254,7 +252,6 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
   });
-  console.log(massage)
   return (
     <div>
       <Paper elevation={0}>
@@ -274,7 +271,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
         </div>
         <List className={classes.listChat}>
           {massage.map(({ text, createBy, imgUrl, createdAt, _id }, index) => (
-            <React.Fragment key={_id} >
+            <React.Fragment key={_id ? _id : index} >
               <ListItem
                 className={createBy._id !== isMe._id ? "" : classes.isMe}
                 button
