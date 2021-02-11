@@ -131,7 +131,10 @@ export default function Inbox({ userOnline }) {
           <List>
             {room.length !== 0
               ? room.map(({ _id, users, chats }) => {
-                const {text}  = chats ? chats.pop(): "";
+                console.log(chats)
+
+                const { text } = chats.length > 0 ? chats.pop() : "";
+
                 const userReceive = users.filter(
                   (user) => user._id !== isMe._id
                 );
@@ -167,10 +170,10 @@ export default function Inbox({ userOnline }) {
                           )}
                       </ListItemAvatar>
                       <div
-                       
+
                       >
-                        <div>{userReceive[0] ? userReceive[0].name : ""} </div>
-                        <div  className={notifications.indexOf(_id) < 0 ?
+                        <div style={{ fontWeight: "bold" }}>{userReceive[0] ? userReceive[0].name : ""} </div>
+                        <div className={notifications.indexOf(_id) < 0 ?
                           classes.notifications :
                           classes.notificationsOn}>{text} </div>
                       </div>
