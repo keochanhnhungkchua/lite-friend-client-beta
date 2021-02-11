@@ -117,17 +117,12 @@ const useStyles = makeStyles((theme) => ({
 export default function UserProfile() {
   const classes = useStyles();
   const { userId } = useParams();
-  const isMe = useRecoilValue(isMeRecoil);
+  const [isMe, setIsMe] = useRecoilState(isMeRecoil);
   const [posts, setPosts] = useRecoilState(PostsRecoil);
   const [user, setUser] = useState([]); //info of you into view
   const [friends, setFriends] = useState([])
   const [editProfile, setEditProfile] = useState(false);//set open close edit profile
   const checkFriend = new Set(isMe.friends).has(userId)
-
-  console.log(userId)
-  console.log(isMe.friends)
-  console.log(checkFriend)
-  const [disabledAddFriend, setDisabledAddFriend] = useState(false)
   const [open, setOpen] = useState(false);
   const [changeCoverAvatar, setChangeCoverAvatar] = useState("")
   useEffect(() => {
@@ -164,9 +159,9 @@ export default function UserProfile() {
   };
   const addFriend = async (userId) => {
     try {
-      await axios.get
+     const {data} = await axios.get
         (`https://lite-friend.herokuapp.com/api/user/addFriend/${userId}/`);
-      setDisabledAddFriend(true)
+        setIsMe(data)
     } catch (error) {
       console.error(error);
     }
@@ -260,7 +255,7 @@ export default function UserProfile() {
           </div>
           <div className={classes.Profile_cover_menu}>
             <Button
-              disabled={userId === isMe._id || checkFriend|| disabledAddFriend ? true : false}
+              disabled={userId === isMe._id || checkFriend ? true : false}
               onClick={() => addFriend(userId)}
               className={classes.Profile_cover_menu_addFriend}>
               Add Friend
