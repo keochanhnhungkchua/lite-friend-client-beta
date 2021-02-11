@@ -9,7 +9,7 @@ import { CardMedia, Paper, Avatar, Button, MenuItem, Menu, Badge, Dialog } from 
 
 import AddPost from "../Post/AddPost";
 import Post from "../Post/Post";
-import { useRecoilValue, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { PostsRecoil, isMeRecoil } from "../Data/data";
 import { UpdateCoverAvatar, UpdateInfo } from "../MyComponent/Upload"
 const axios = require("axios");
