@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,Suspense} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router-dom";
 
@@ -183,9 +183,8 @@ export default function UserProfile() {
     setChangeCoverAvatar("info");
     setOpen(true);
   }
-
   return (
-    <div>
+    <Suspense fallback={<h3>loading data...</h3>}>
       {/* edit info user */}
       <Dialog
         onClose={closeUpdateCoverAvatar}
@@ -330,6 +329,6 @@ export default function UserProfile() {
           ))}
         </div>
       </Paper >
-    </div>
+      </Suspense>
   );
 }
