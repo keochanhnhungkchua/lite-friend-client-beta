@@ -12,7 +12,7 @@ import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
 import Home from "./components/Pages/Home"
 import ChatApp from "./components/Socketio/ChatApp";
-import { GoHomeIfLogged } from "./router"
+import { GoHomeIfLogged,GologinIfNotLogin } from "./routes"
 
 export default function App() {
   const token = localStorage.getItem("lite-friend");
@@ -29,12 +29,14 @@ export default function App() {
   }
   return (
     <Router>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/forgot-password" component={ForgotPassword} />
-        <Route exact path="/profile/:userId" component={ProfileRender} />
-        <Route exact path="/" component={Home}/>
-        { isAuthenticated === false ?  <Redirect to="/login"/> : <Redirect  to="/" />}
+      <Switch>
+        <GoHomeIfLogged exact path="/login" component={Login} />
+        <GoHomeIfLogged exact path="/register" component={Register} />
+        <GoHomeIfLogged exact path="/forgot-password" component={ForgotPassword} />
+        <GologinIfNotLogin exact path="/" component={Home} />
+        <GologinIfNotLogin exact path="/profile/:userId" component={ProfileRender} />
+      </Switch>
+        
     </Router>
   )
 
