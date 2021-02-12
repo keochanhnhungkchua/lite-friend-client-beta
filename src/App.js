@@ -33,10 +33,10 @@ export default function App() {
         <GoHomeIfLogged exact path="/login" component={Login} />
         <GoHomeIfLogged exact path="/register" component={Register} />
         <GoHomeIfLogged exact path="/forgot-password" component={ForgotPassword} />
+  
         <GologinIfNotLogin exact path="/" component={Home} />
         <GologinIfNotLogin exact path="/profile/:userId" component={ProfileRender} />
-      </Switch>
-        
+      </Switch>   
     </Router>
   )
 

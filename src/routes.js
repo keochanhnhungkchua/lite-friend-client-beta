@@ -24,10 +24,10 @@ export const GoHomeIfLogged = ({ component: Component, ...rest }) => {
         <Route
           {...rest}
           render={(props) =>
-            !isAuthenticated  ? (
-              <Redirect to="/login" />
+            isAuthenticated  ? (
+              <Component {...props}  />            
             ) : (
-              <Component {...props}  />
+              <Redirect to="/login" />
             )
           }
         />
