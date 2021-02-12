@@ -19,7 +19,7 @@ export const GoHomeIfLogged = ({ component: Component, ...rest }) => {
     );
   };
 
-  export const GologinIfNotLogin = ({ component: Component, ...rest }) => {
+  export const GoLoginIfNotLoggedin = ({ component: Component, ...rest }) => {
       return (
         <Route
           {...rest}
