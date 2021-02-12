@@ -1,6 +1,6 @@
 import React from "react";
 import jwt from "jsonwebtoken";
-import { BrowserRouter as Router, Switch } from "react-router-dom";
+import { BrowserRouter as Router,Route , Switch } from "react-router-dom";
 
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
@@ -8,7 +8,7 @@ import ForgotPassword from "./components/Auth/ForgotPassword";
 import setAuthHeader from "./components/Data/setAuthHeader";
 import Profile from "./components/Pages/Profile"
 import Home from "./components/Pages/Home"
-
+import NotFound from "./components/MyComponent/NotFound"
 import { GoHomeIfLogged,GoLoginIfNotLoggedin } from "./routes"
 
 export default function App() {
@@ -28,10 +28,10 @@ export default function App() {
         <GoHomeIfLogged exact path="/login" component={Login} />
         <GoHomeIfLogged exact path="/register" component={Register} />
         <GoHomeIfLogged exact path="/forgot-password" component={ForgotPassword} />
-        <GoLoginIfNotLoggedin path="/" component={Home} />
-        <GoLoginIfNotLoggedin path="/profile/:userId" component={Profile} />
+        <GoLoginIfNotLoggedin exact path="/" component={Home} />
+        <GoLoginIfNotLoggedin exact path="/profile/:userId" component={Profile} />
+        <Route component={NotFound} />
       </Switch>   
     </Router>
   )
 }
-
