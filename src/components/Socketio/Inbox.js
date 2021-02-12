@@ -131,8 +131,6 @@ export default function Inbox({ userOnline }) {
           <List>
             {room.length !== 0
               ? room.map(({ _id, users, chats }) => {
-                console.log(chats)
-
                 const { text } = chats.length > 0 ? chats.pop() : "";
 
                 const userReceive = users.filter(

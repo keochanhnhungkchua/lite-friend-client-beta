@@ -1,5 +1,4 @@
 import React,{Suspense} from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import Header from "../Layout/Header"
 import Footer from "../Layout/Footer"
 export default function Home () {

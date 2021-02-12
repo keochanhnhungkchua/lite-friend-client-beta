@@ -19,7 +19,10 @@ export const isMeRecoil = atom({
 
 const getnotification = selector({
   key: "getnotification",
-  get: ({ get }) => get(isMeRecoilState).notifications
+  get: ({ get }) =>{
+    if(token)
+    return get(isMeRecoilState).notifications
+  }
 });
 export const notificationsRecoil = atom({
   key: "notificationsRecoil",

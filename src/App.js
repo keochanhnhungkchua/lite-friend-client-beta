@@ -6,7 +6,7 @@ import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
 import ForgotPassword from "./components/Auth/ForgotPassword";
 import setAuthHeader from "./components/Data/setAuthHeader";
-import ProfileRender from "./components/Pages/Profile";
+import ProfileRender from "./components/Pages/ProfileRender";
 import PostId from "./components/Pages/PostId";
 import Header from "./components/Layout/Header";
 import Footer from "./components/Layout/Footer";
@@ -14,11 +14,9 @@ import Home from "./components/Pages/Home"
 import ChatApp from "./components/Socketio/ChatApp";
 import { GoHomeIfLogged } from "./router"
 
-
-
 export default function App() {
   const token = localStorage.getItem("lite-friend");
-
+  const isAuthenticated = token !== null ? true : false;
   if (token) {
     const currentTime = Date.now() / 1000;
     const decoded = jwt.decode(token, { complete: true });
@@ -31,13 +29,12 @@ export default function App() {
   }
   return (
     <Router>
-      <Switch>
         <Route exact path="/login" component={Login} />
         <Route exact path="/register" component={Register} />
         <Route exact path="/forgot-password" component={ForgotPassword} />
-        < Route exact path="/profile/:userId" component={ProfileRender} />
-        {token ? <Home /> : <Login />}
-      </Switch>
+        <Route exact path="/profile/:userId" component={ProfileRender} />
+        <Route exact path="/" component={Home}/>
+        { isAuthenticated === false ?  <Redirect to="/login"/> : <Redirect  to="/" />}
     </Router>
   )
 
