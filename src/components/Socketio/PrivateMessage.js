@@ -251,7 +251,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
   //auto scrollIntoView
   useEffect(() => {
     messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
-  });
+  }, [massage]);
   return (
     <div>
       <Paper elevation={0}>
@@ -290,7 +290,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
                 >
 
                   <Tooltip
-                    placement="left"
+
                     onClose={handleTooltipClose}
                     open={openLightTooltip === index ? true : false}
                     title={moment(createdAt).fromNow()}

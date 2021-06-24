@@ -9,7 +9,7 @@ import Friend from "./Friend";
 import { startIOConnection, socket } from "../Data/socketio";
 import { notificationsRecoil, isMeRecoil } from "../Data/data";
 
-startIOConnection();
+
 const useStyles = makeStyles({
   header: {
     backgroundColor: " #303f9f",

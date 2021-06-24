@@ -1,36 +1,43 @@
 import React from "react";
+import { useRecoilValueLoadable, useRecoilValue } from "recoil"
+import { isMeRecoilState } from "./components/Data/data"
+import { Route, Redirect } from "react-router-dom";
 
-import { Route,Redirect} from "react-router-dom";
-const token = localStorage.getItem("lite-friend");
-const isAuthenticated = token !== null ? true : false;
 export const GoHomeIfLogged = ({ component: Component, ...rest }) => {
+  const status = useRecoilValueLoadable(isMeRecoilState).state
+  const isLoading = status === "loading" ? false : true;
+  let isAuthenticated = status === "hasValue" ? true : false;
 
-    return (
-      <Route
-        {...rest}
-        render={(props) =>
-          isAuthenticated  ? (
-            <Redirect to="/" />
-          ) : (
-            <Component {...props}  />
+  return (
+    isLoading && <Route
+      {...rest}
+      render={(props) =>
+        isAuthenticated ? (
+          <Redirect to="/" />
+        ) : (
+            <Component {...props} />
           )
-        }
-      />
-    );
-  };
+      }
+    />
+  );
+};
 
-  export const GoLoginIfNotLoggedin = ({ component: Component, ...rest }) => {
-      return (
-        <Route
-          {...rest}
-          render={(props) =>
-            isAuthenticated  ? (
-              <Component {...props}  />            
-            ) : (
-              <Redirect to="/login" />
-            )
-          }
-        />
-      );
-    };
+export const GoLoginIfNotLoggedin = ({ component: Component, ...rest }) => {
+  const status = useRecoilValueLoadable(isMeRecoilState).state
+  const isLoading = status === "loading" ? false : true;
+  let isAuthenticated = status === "hasValue" ? true : false;
+
+  return (
+    isLoading && <Route
+      {...rest}
+      render={(props) =>
+        isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+            <Redirect to="/login" />
+          )
+      }
+    />
+  );
+};
 

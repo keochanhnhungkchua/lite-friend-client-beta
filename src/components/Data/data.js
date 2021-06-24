@@ -6,10 +6,8 @@ axios.defaults.baseURL = "https://lite-friend.herokuapp.com/api";
 export const isMeRecoilState = selector({
   key: "isMeRecoilState",
   get: async () => {
-    if(token){
-      const { data } = await axios.get("/user/me");
-      return data;
-    }
+    const { data } = await axios.get("/user/me");
+    return data;
   },
 });
 export const isMeRecoil = atom({
@@ -19,9 +17,9 @@ export const isMeRecoil = atom({
 
 const getnotification = selector({
   key: "getnotification",
-  get: ({ get }) =>{
-    if(token)
-    return get(isMeRecoilState).notifications
+  get: ({ get }) => {
+    if (token)
+      return get(isMeRecoilState).notifications
   }
 });
 export const notificationsRecoil = atom({

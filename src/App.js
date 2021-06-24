@@ -1,6 +1,6 @@
 import React from "react";
 import jwt from "jsonwebtoken";
-import { BrowserRouter as Router,Route , Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
 import Login from "./components/Auth/Login";
 import Register from "./components/Auth/Register";
@@ -9,10 +9,11 @@ import setAuthHeader from "./components/Data/setAuthHeader";
 import Profile from "./components/Pages/Profile"
 import Home from "./components/Pages/Home"
 import NotFound from "./components/MyComponent/NotFound"
-import { GoHomeIfLogged,GoLoginIfNotLoggedin } from "./routes"
+import { GoHomeIfLogged, GoLoginIfNotLoggedin } from "./routes"
 
 export default function App() {
   const token = localStorage.getItem("lite-friend");
+
   if (token) {
     const currentTime = Date.now() / 1000;
     const decoded = jwt.decode(token, { complete: true });
@@ -31,7 +32,7 @@ export default function App() {
         <GoLoginIfNotLoggedin exact path="/" component={Home} />
         <GoLoginIfNotLoggedin exact path="/profile/:userId" component={Profile} />
         <Route component={NotFound} />
-      </Switch>   
+      </Switch>
     </Router>
   )
 }
