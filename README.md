@@ -4,11 +4,11 @@
         * upload story
         * post bài :like comment
         * ...
-## Backend : sử dụng react
+## Fontend : sử dụng react
     * socketIo chat
     * UI: material-ui
     * State: Recoil
-## Fontend: sử dụng NodeJs 
+## Backend: sử dụng NodeJs 
     * DB: monggoDB
     * Chat: socketIo
  
