@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { useForm } from "react-hook-form";
-import moment from "moment"
+import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import { Avatar, Button, TextField, Link } from "@material-ui/core";
 
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     flexGrow: 1,
     margin: "0px 10px",
     backgroundColor: "#f0f2f5",
-    borderRadius: "5px !important"
+    borderRadius: "5px !important",
   },
 
   form_button: {
@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#ccd0d5",
     fontSize: 13,
   },
-
 }));
 
 export default function AddComment({ post }) {
@@ -69,23 +68,24 @@ export default function AddComment({ post }) {
 
   const postComment = async (e) => {
     if (e.comment.trim()) {
-      const { data, } = await axios.post(
-        `https://lite-friend.herokuapp.com/api/post/${post._id}/comment/`, e);
+      const { data } = await axios.post(
+        `https://lite-friend-server.onrender.com/api/post/${post._id}/comment/`,
+        e
+      );
       reset();
       //update comment when in home page
-      const postIndex = updateCommentPost.findIndex((comment) => comment._id === post._id);
+      const postIndex = updateCommentPost.findIndex(
+        (comment) => comment._id === post._id
+      );
       const newComment = [...updateCommentPost];
       newComment.splice(postIndex, 1, data);
       setUpdateCommentPost(newComment);
-
     }
   };
   return (
     <div>
       {/* add comment */}
-      <form className={classes.form}
-        onSubmit={handleSubmit(postComment)}
-      >
+      <form className={classes.form} onSubmit={handleSubmit(postComment)}>
         <Avatar alt="avatar" src={avatar} />
         <TextField
           className={classes.form_input}
@@ -109,13 +109,9 @@ export default function AddComment({ post }) {
         <div className={classes.showComment} key={comment._id}>
           <Avatar alt="avatar" src={comment.user.avatar} />
           <div>
-            <h5 className={classes.showComment__name}>
-              {comment.user.name}
-            </h5>
-            <p className={classes.showComment__text}>
-              {comment.text}
-            </p>
-            <div >
+            <h5 className={classes.showComment__name}>{comment.user.name}</h5>
+            <p className={classes.showComment__text}>{comment.text}</p>
+            <div>
               <Link underline="none" className={classes.showComment__reply}>
                 {moment(comment.createdAt).fromNow()}
               </Link>
@@ -146,8 +142,8 @@ export default function AddComment({ post }) {
           more comments
         </div>
       ) : (
-          ""
-        )}
+        ""
+      )}
     </div>
   );
 }

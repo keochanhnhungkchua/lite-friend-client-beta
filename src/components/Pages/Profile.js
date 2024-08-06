@@ -1,17 +1,34 @@
-import React, { useState, useEffect ,Suspense} from "react";
+import React, { useState, useEffect, Suspense } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router-dom";
 
 import { Link } from "react-router-dom";
 
-import { ArrowBack, MoreHoriz, Mail, LocationOn, Home, School, CameraAlt } from "@material-ui/icons";
-import { CardMedia, Paper, Avatar, Button, MenuItem, Menu, Badge, Dialog } from "@material-ui/core";
+import {
+  ArrowBack,
+  MoreHoriz,
+  Mail,
+  LocationOn,
+  Home,
+  School,
+  CameraAlt,
+} from "@material-ui/icons";
+import {
+  CardMedia,
+  Paper,
+  Avatar,
+  Button,
+  MenuItem,
+  Menu,
+  Badge,
+  Dialog,
+} from "@material-ui/core";
 
 import AddPost from "../Post/AddPost";
 import Post from "../Post/Post";
 import { useRecoilState } from "recoil";
 import { PostsRecoil, isMeRecoil } from "../Data/data";
-import { UpdateCoverAvatar, UpdateInfo } from "../MyComponent/Upload"
+import { UpdateCoverAvatar, UpdateInfo } from "../MyComponent/Upload";
 const axios = require("axios");
 
 const useStyles = makeStyles((theme) => ({
@@ -42,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     // left: (window.innerWidth / 2) - 50,
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
 
   Profile_cover_menu: {
@@ -55,8 +72,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     fontWeight: "bold",
     "&:hover": {
-      backgroundColor: "#1877f2"
-    }
+      backgroundColor: "#1877f2",
+    },
   },
   Profile_cover_menu_icon: {
     backgroundColor: "#d7dadf",
@@ -89,10 +106,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 10,
     "&:hover": {
       backgroundColor: "#ced4ddd4",
-    }
+    },
   },
   coverEmpty: {
-    backgroundColor: "#bbbbbb66"
+    backgroundColor: "#bbbbbb66",
   },
   CameraAlt: {
     backgroundColor: "#e4e6eb",
@@ -106,13 +123,12 @@ const useStyles = makeStyles((theme) => ({
     bottom: 10,
     backgroundColor: "#d5d7dc26",
     borderRadius: 5,
-    zIndex: 1
+    zIndex: 1,
   },
   input: {
-    display: "none"
-  }
+    display: "none",
+  },
 }));
-
 
 export default function UserProfile() {
   const classes = useStyles();
@@ -120,37 +136,37 @@ export default function UserProfile() {
   const [isMe, setIsMe] = useRecoilState(isMeRecoil);
   const [posts, setPosts] = useRecoilState(PostsRecoil);
   const [user, setUser] = useState([]); //info of you into view
-  const [friends, setFriends] = useState([])
-  const [editProfile, setEditProfile] = useState(false);//set open close edit profile
-  const checkFriend = new Set(isMe.friends).has(userId)
+  const [friends, setFriends] = useState([]);
+  const [editProfile, setEditProfile] = useState(false); //set open close edit profile
+  const checkFriend = new Set(isMe.friends).has(userId);
   const [open, setOpen] = useState(false);
-  const [changeCoverAvatar, setChangeCoverAvatar] = useState("")
+  const [changeCoverAvatar, setChangeCoverAvatar] = useState("");
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
     async function getUser() {
       try {
         const { data } = await axios.get(
-          `https://lite-friend.herokuapp.com/api/post/profile/${userId}/`
+          `https://lite-friend-server.onrender.com/api/post/profile/${userId}/`
         );
-        const friend = await axios.get
-          (`https://lite-friend.herokuapp.com/api/user/me/friends/${userId}`);
+        const friend = await axios.get(
+          `https://lite-friend-server.onrender.com/api/user/me/friends/${userId}`
+        );
 
         if (isSubscribed) {
           setPosts(data.posts);
           setUser(data.user);
-          setFriends(friend.data)
+          setFriends(friend.data);
         }
-
       } catch (error) {
         console.error(error);
       }
     }
     getUser();
     return () => {
-      setPosts([])
-      setUser([])
-      isSubscribed = false
-    }
+      setPosts([]);
+      setUser([]);
+      isSubscribed = false;
+    };
   }, [userId, setPosts]);
 
   const handleClickEditProfile = (event) => {
@@ -159,30 +175,31 @@ export default function UserProfile() {
   };
   const addFriend = async (userId) => {
     try {
-     const {data} = await axios.get
-        (`https://lite-friend.herokuapp.com/api/user/addFriend/${userId}/`);
-        setIsMe(data)
+      const { data } = await axios.get(
+        `https://lite-friend-server.onrender.com/api/user/addFriend/${userId}/`
+      );
+      setIsMe(data);
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   const closeUpdateCoverAvatar = () => {
-    setOpen(false)
-    setEditProfile(false)
-  }
+    setOpen(false);
+    setEditProfile(false);
+  };
   const updateCover = () => {
     setChangeCoverAvatar("cover");
     setOpen(true);
-  }
+  };
   const updateAvatar = () => {
     setChangeCoverAvatar("avatar");
     setOpen(true);
-  }
+  };
   const updateInfo = () => {
     setChangeCoverAvatar("info");
     setOpen(true);
-  }
+  };
   return (
     <Suspense fallback={<h3>loading data...</h3>}>
       {/* edit info user */}
@@ -192,12 +209,14 @@ export default function UserProfile() {
         open={open}
         fullScreen={true}
       >
-        {changeCoverAvatar === "info" ? <UpdateInfo closeUpdateCoverAvatar={closeUpdateCoverAvatar} /> :
+        {changeCoverAvatar === "info" ? (
+          <UpdateInfo closeUpdateCoverAvatar={closeUpdateCoverAvatar} />
+        ) : (
           <UpdateCoverAvatar
             closeUpdateCoverAvatar={closeUpdateCoverAvatar}
-            change={changeCoverAvatar} />
-        }
-
+            change={changeCoverAvatar}
+          />
+        )}
       </Dialog>
       <Paper className={classes.Profile}>
         <Link style={{ textDecoration: "none" }} to="/">
@@ -209,7 +228,6 @@ export default function UserProfile() {
           </div>
         </Link>
 
-
         <div className={classes.Profile_cover}>
           <div style={{ position: "relative" }}>
             <CardMedia
@@ -220,29 +238,38 @@ export default function UserProfile() {
               title="cover"
             />
 
-            {userId === isMe._id ?
+            {userId === isMe._id ? (
               <Button
                 onClick={updateCover}
-
                 size="small"
                 className={classes.button}
                 startIcon={<CameraAlt />}
               >
                 Edit Cover Photos
-           </Button>
-              : ""}
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className={classes.Profile_cover_avatar}>
             <Badge
               overlap="circle"
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'right',
+                vertical: "bottom",
+                horizontal: "right",
               }}
-              classes={{ anchorOriginBottomRightCircle: userId === isMe._id ? classes.CameraAlt : "" }}
-              badgeContent={userId === isMe._id ?
-                <CameraAlt onClick={updateAvatar} fontSize="small" /> : ""}
+              classes={{
+                anchorOriginBottomRightCircle:
+                  userId === isMe._id ? classes.CameraAlt : "",
+              }}
+              badgeContent={
+                userId === isMe._id ? (
+                  <CameraAlt onClick={updateAvatar} fontSize="small" />
+                ) : (
+                  ""
+                )
+              }
             >
               <Avatar
                 className={classes.Profile_cover_avatar_avatar}
@@ -250,19 +277,20 @@ export default function UserProfile() {
                 src={userId === isMe._id ? isMe.avatar : user.avatar}
               />
             </Badge>
-            <h2 > {userId === isMe._id ? isMe.name : user.name} </h2>
+            <h2> {userId === isMe._id ? isMe.name : user.name} </h2>
           </div>
           <div className={classes.Profile_cover_menu}>
             <Button
               disabled={userId === isMe._id || checkFriend ? true : false}
               onClick={() => addFriend(userId)}
-              className={classes.Profile_cover_menu_addFriend}>
+              className={classes.Profile_cover_menu_addFriend}
+            >
               Add Friend
             </Button>
             <Mail className={classes.Profile_cover_menu_icon} />
             <MoreHoriz
               className={classes.Profile_cover_menu_icon}
-              onClick={userId === isMe._id ? handleClickEditProfile : () => { }}
+              onClick={userId === isMe._id ? handleClickEditProfile : () => {}}
             />
           </div>
           <Menu
@@ -279,20 +307,35 @@ export default function UserProfile() {
             <div className={classes.Profile_cover_info}>
               <School />
               <span>&nbsp;Studied at &nbsp; </span>
-              <h4 style={{ margin: 0 }}>{userId === isMe._id ? isMe.userInfo.studiedAt :
-                user.userInfo === undefined ? "" : user.userInfo.studiedAt}</h4>
+              <h4 style={{ margin: 0 }}>
+                {userId === isMe._id
+                  ? isMe.userInfo.studiedAt
+                  : user.userInfo === undefined
+                  ? ""
+                  : user.userInfo.studiedAt}
+              </h4>
             </div>
             <div className={classes.Profile_cover_info}>
               <Home />
               <span>&nbsp; Lives in &nbsp; </span>
-              <h4 style={{ margin: 0 }}>{userId === isMe._id ? isMe.userInfo.liveIn :
-                user.userInfo === undefined ? "" : user.userInfo.liveIn}</h4>{" "}
+              <h4 style={{ margin: 0 }}>
+                {userId === isMe._id
+                  ? isMe.userInfo.liveIn
+                  : user.userInfo === undefined
+                  ? ""
+                  : user.userInfo.liveIn}
+              </h4>{" "}
             </div>
             <div className={classes.Profile_cover_info}>
               <LocationOn />
               <span>&nbsp; From &nbsp; </span>
-              <h4 style={{ margin: 0 }}>{userId === isMe._id ? isMe.userInfo.from :
-                user.userInfo === undefined ? "" : user.userInfo.from}</h4>
+              <h4 style={{ margin: 0 }}>
+                {userId === isMe._id
+                  ? isMe.userInfo.from
+                  : user.userInfo === undefined
+                  ? ""
+                  : user.userInfo.from}
+              </h4>
             </div>
             <div className={classes.Profile_cover_info}>
               <MoreHoriz /> <span>&nbsp; see more info &nbsp; </span>{" "}
@@ -303,21 +346,21 @@ export default function UserProfile() {
             <span> friends({user.friends ? user.friends.length : 0}) </span>
 
             <div className={classes.cv}>
-              {friends ?
-                friends.slice(0, 3).map((item) =>
-                  <div key={item._id}>
-                    <Link to={`/profile/${item._id}`}>
-                      <img
-                        className={classes.friend}
-                        src={item.avatar}
-                        alt="friend"
-                      />
-                    </Link>
+              {friends
+                ? friends.slice(0, 3).map((item) => (
+                    <div key={item._id}>
+                      <Link to={`/profile/${item._id}`}>
+                        <img
+                          className={classes.friend}
+                          src={item.avatar}
+                          alt="friend"
+                        />
+                      </Link>
 
-                    <h4 style={{ margin: 0 }}> {item.name}</h4>
-                  </div>
-                ) : ""}
-
+                      <h4 style={{ margin: 0 }}> {item.name}</h4>
+                    </div>
+                  ))
+                : ""}
             </div>
 
             <Button className={classes.bb}>See All Friends</Button>
@@ -328,7 +371,7 @@ export default function UserProfile() {
             <Post key={post._id} post={post} />
           ))}
         </div>
-      </Paper >
-      </Suspense>
+      </Paper>
+    </Suspense>
   );
 }

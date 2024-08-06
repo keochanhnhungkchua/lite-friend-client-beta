@@ -13,7 +13,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import MultiImageInput from "react-multiple-image-input";
 import { Link } from "react-router-dom";
 import { PostsRecoil, isMeRecoil } from "../Data/data";
-import { uploadImage } from "../Data/api"
+import { uploadImage } from "../Data/api";
 const useStyles = makeStyles((theme) => ({
   addPost: {
     padding: 10,
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     padding: "4px 8px",
     alignItems: "center",
     flexGrow: 1,
-    justifyContent: "center"
+    justifyContent: "center",
   },
   //dialog upload images
   uploadImage: {
@@ -91,7 +91,6 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     paddingLeft: 5,
   },
-
 }));
 
 export default function BasicTextFields() {
@@ -106,16 +105,19 @@ export default function BasicTextFields() {
   const onSubmit = async (e) => {
     setOpen(false);
     const file = Object.values(images);
-    var imgUrl = []
+    var imgUrl = [];
     if (file.length !== 0) {
-      imgUrl = await uploadImage(file)
+      imgUrl = await uploadImage(file);
     }
     const { text } = e;
-    const { data } = await axios.post("https://lite-friend.herokuapp.com/api/post", {
-      text,
-      imgUrl,
-    });
-    reset()
+    const { data } = await axios.post(
+      "https://lite-friend-server.onrender.com/api/post",
+      {
+        text,
+        imgUrl,
+      }
+    );
+    reset();
     setImages({});
     const newPost = [...updateNewPost];
     newPost.unshift(data);
@@ -142,9 +144,7 @@ export default function BasicTextFields() {
           placeholder="What's on your mind?"
         ></input>
       </div>
-      <div onClick={handleClickOpen}
-        className={classes.addPost_children}
-      >
+      <div onClick={handleClickOpen} className={classes.addPost_children}>
         <div className={classes.addPost_children_icon}>
           <ImageIcon />
           <div>Photo </div>
@@ -166,11 +166,15 @@ export default function BasicTextFields() {
         open={open}
         fullScreen={true}
       >
-        <form onSubmit={handleSubmit(onSubmit)}
-          className={classes.uploadImage_form}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.uploadImage_form}
+        >
           <div className={classes.uploadImage_form_header}>
-            <div onClick={handleClose}
-              className={classes.uploadImage_form_header_goback}>
+            <div
+              onClick={handleClose}
+              className={classes.uploadImage_form_header_goback}
+            >
               {" "}
               <ArrowBackIcon />
               Go Back
@@ -196,7 +200,6 @@ export default function BasicTextFields() {
             max={5}
             allowCrop={false}
             theme="light"
-
           />
           <input
             type="submit"

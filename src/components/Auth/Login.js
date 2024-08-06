@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import { TextField, Button, Paper } from '@material-ui/core';
+import { TextField, Button, Paper } from "@material-ui/core";
 import axios from "axios";
-import logo from "./litefriend.png"
+import logo from "./litefriend.png";
 const useStyles = makeStyles((theme) => ({
   formLogin: {
     display: "flex",
     flexDirection: "column",
     padding: "10%",
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   formInput: {
     margin: "5px 0px",
@@ -30,42 +30,40 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: " #1877f2",
     fontWeight: "bold",
     color: "white",
-    transitionDelay: '0.2s',
+    transitionDelay: "0.2s",
     "&:hover": {
       backgroundColor: "#1852f2f2",
     },
-  }
+  },
 }));
 const schema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email format")
-    .required(),
-  password: Yup.string()
-    .min(8, "Mininum 8 charaters")
-    .required(),
-})
+  email: Yup.string().email("Invalid email format").required(),
+  password: Yup.string().min(8, "Mininum 8 charaters").required(),
+});
 export default function Login() {
   const classes = useStyles();
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const { register, handleSubmit, errors, reset } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
   const onSubmit = async (e) => {
-    setError("")
+    setError("");
     try {
-      const { data } = await axios.post("https://lite-friend.herokuapp.com/api/auth/login", e)
+      const { data } = await axios.post(
+        "https://lite-friend-server.onrender.com/api/auth/login",
+        e
+      );
 
       if (data.success) {
-        localStorage.setItem("lite-friend", data.token)
+        localStorage.setItem("lite-friend", data.token);
         window.location.href = "/";
         reset();
       } else {
-        setError(data.error)
+        setError(data.error);
       }
     } catch (errors) {
       console.log(errors);
     }
-
   };
 
   return (
@@ -92,12 +90,9 @@ export default function Login() {
           error={errors.password || error ? true : false ? true : false}
           helperText={errors.password ? errors.password.message : error}
         />
-        <Button type="submit"
-          variant="contained"
-          className={classes.button}
-        >
+        <Button type="submit" variant="contained" className={classes.button}>
           Send
-         </Button>
+        </Button>
       </form>
       <div className={classes.signIn}>
         <Link to="/register">Don't have an account? Sign up</Link>
@@ -106,8 +101,6 @@ export default function Login() {
     </Paper>
   );
 }
-
-
 
 // import React from "react";
 
@@ -151,7 +144,7 @@ export default function Login() {
 //   const { register, handleSubmit, errors } = useForm();
 //   const onSubmit = async (e) => {
 //     const { data } = await axios.post(
-//       "https://lite-friend.herokuapp.com/api/auth/login",
+//       "https://lite-friend-server.onrender.com/api/auth/login",
 //       e
 //     );
 //     localStorage.setItem("lite-friend", data.token);

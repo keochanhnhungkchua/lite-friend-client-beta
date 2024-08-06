@@ -1,7 +1,7 @@
 import { selector, atom } from "recoil";
 const axios = require("axios");
 const token = localStorage.getItem("lite-friend");
-axios.defaults.baseURL = "https://lite-friend.herokuapp.com/api";
+axios.defaults.baseURL = "https://lite-friend-server.onrender.com/api";
 
 export const isMeRecoilState = selector({
   key: "isMeRecoilState",
@@ -18,14 +18,13 @@ export const isMeRecoil = atom({
 const getnotification = selector({
   key: "getnotification",
   get: ({ get }) => {
-    if (token)
-      return get(isMeRecoilState).notifications
-  }
+    if (token) return get(isMeRecoilState).notifications;
+  },
 });
 export const notificationsRecoil = atom({
   key: "notificationsRecoil",
   default: getnotification,
-})
+});
 
 export const PostsRecoil = atom({
   key: "PostsRecoil",

@@ -12,7 +12,7 @@ import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import AvTimerIcon from "@material-ui/icons/AvTimer";
 
 import { isMeRecoil } from "../Data/data";
-import { uploadImage } from "../Data/api"
+import { uploadImage } from "../Data/api";
 
 const useStyles = makeStyles((theme) => ({
   story: {
@@ -144,11 +144,11 @@ function Story0({ list }) {
         style={
           list.avatar === ""
             ? {
-              backgroundColor: "#888",
-            }
+                backgroundColor: "#888",
+              }
             : {
-              backgroundImage: "url(" + list.avatar + ")",
-            }
+                backgroundImage: "url(" + list.avatar + ")",
+              }
         }
       >
         <Avatar className={classes.avatar0} alt="avatar">
@@ -188,26 +188,31 @@ export default function App() {
     setOpen(false);
   };
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
     async function getStory() {
       try {
-        const { data } = await axios.get("https://lite-friend.herokuapp.com/api/story")
+        const { data } = await axios.get(
+          "https://lite-friend-server.onrender.com/api/story"
+        );
         if (isSubscribed) setstoryUpdate(data);
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     }
     getStory();
-    return () => isSubscribed = false
-  }, [])
+    return () => (isSubscribed = false);
+  }, []);
   //upload story
   const onSubmit = async (e) => {
     setOpen(false);
     const file = Object.values(images);
     if (file.length !== 0) {
-      const imgUrl = await uploadImage(file)
-      const { data } = await axios.post("https://lite-friend.herokuapp.com/api/story", { imgUrl: imgUrl[0] });
-      setstoryUpdate((prev) => [user, data, ...prev.slice(1)])
+      const imgUrl = await uploadImage(file);
+      const { data } = await axios.post(
+        "https://lite-friend-server.onrender.com/api/story",
+        { imgUrl: imgUrl[0] }
+      );
+      setstoryUpdate((prev) => [user, data, ...prev.slice(1)]);
       setImages({});
     }
   };
@@ -247,8 +252,7 @@ export default function App() {
         aria-labelledby="view story"
         open={story}
       >
-        <div onClick={handStory}
-          className={classes.showStory}>
+        <div onClick={handStory} className={classes.showStory}>
           X
         </div>
         <img src={showStory.imgUrl} style={{ width: "inherit" }} alt="logo" />
@@ -265,8 +269,8 @@ export default function App() {
             <div onClick={handleClose} className={classes.uploadStory_goback}>
               {" "}
               <ArrowBackIcon />
-                Go Back
-              </div>
+              Go Back
+            </div>
             <input
               type="submit"
               className={classes.uploadStory_addStory}

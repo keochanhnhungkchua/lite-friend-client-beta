@@ -2,7 +2,9 @@ import io from "socket.io-client";
 const token = localStorage.getItem("lite-friend")
   ? localStorage.getItem("lite-friend")
   : false;
-export const socket = io("https://lite-friend.herokuapp.com", { query: "token=" + token });
+export const socket = io("https://lite-friend-server.onrender.com", {
+  query: "token=" + token,
+});
 
 /**CHAT**/
 //start the connection
@@ -19,7 +21,6 @@ export const leaveRoom = (roomId) => {
 export const privateMessageSocketio = (data) => {
   socket.emit("privateMessageSocketio", data);
 };
-
 
 export const getOnlineUsers = () => {
   socket.on("Server-send-user-online", (data) => data);

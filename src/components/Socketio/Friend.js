@@ -75,10 +75,12 @@ export default function Friend({ userOnline }) {
   const [roomId, setRoomId] = useState([]);
 
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
     async function getFriends() {
       try {
-        const { data } = await axios.get("https://lite-friend.herokuapp.com/api/user/me/friends");
+        const { data } = await axios.get(
+          "https://lite-friend-server.onrender.com/api/user/me/friends"
+        );
         if (isSubscribed) {
           setUsers(data);
         }
@@ -87,16 +89,17 @@ export default function Friend({ userOnline }) {
       }
     }
     getFriends();
-    return () => isSubscribed = false
+    return () => (isSubscribed = false);
   }, []);
-
-
 
   const handleOpenPrivateMassge = async (userId) => {
     const userInRoom = [userId, _id].sort();
     const roomId = userInRoom.join("-");
     try {
-      const { data } = await axios.post(`https://lite-friend.herokuapp.com/api/chat/room/${roomId}`, userInRoom);
+      const { data } = await axios.post(
+        `https://lite-friend-server.onrender.com/api/chat/room/${roomId}`,
+        userInRoom
+      );
       setRoomId(data._id);
     } catch (error) {
       console.error(error);
@@ -121,7 +124,7 @@ export default function Friend({ userOnline }) {
                   onClick={() => handleOpenPrivateMassge(_id)}
                 >
                   <ListItemAvatar>
-                    {userOnline.some(x => x === _id) ? (
+                    {userOnline.some((x) => x === _id) ? (
                       <StyledBadge
                         overlap="circle"
                         anchorOrigin={{
@@ -133,8 +136,8 @@ export default function Friend({ userOnline }) {
                         <Avatar alt="Profile Picture" src={avatar} />
                       </StyledBadge>
                     ) : (
-                        <Avatar alt="Profile Picture" src={avatar} />
-                      )}
+                      <Avatar alt="Profile Picture" src={avatar} />
+                    )}
                   </ListItemAvatar>
                   <ListItemText primary={name} />
                 </ListItem>

@@ -3,18 +3,18 @@ import axios from "axios";
 import AddPost from "./AddPost";
 import Post from "./Post";
 import Story from "./Story";
-import { useRecoilState, } from "recoil";
+import { useRecoilState } from "recoil";
 import { PostsRecoil } from "../Data/data";
 
-
 export default function ListPost() {
-
   const [posts, setPosts] = useRecoilState(PostsRecoil);
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
     async function getPost() {
       try {
-        const { data } = await axios.get("https://lite-friend.herokuapp.com/api/post");
+        const { data } = await axios.get(
+          "https://lite-friend-server.onrender.com/api/post"
+        );
         if (isSubscribed) setPosts(data);
       } catch (error) {
         console.error(error);
@@ -22,9 +22,9 @@ export default function ListPost() {
     }
     getPost();
     return () => {
-      setPosts([])
-      isSubscribed = false
-    }
+      setPosts([]);
+      isSubscribed = false;
+    };
   }, [setPosts]);
 
   return (

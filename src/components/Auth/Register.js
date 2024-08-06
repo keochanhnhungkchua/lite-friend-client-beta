@@ -1,19 +1,18 @@
-
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useForm } from "react-hook-form";
-import { yupResolver } from '@hookform/resolvers/yup';
+import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
-import { TextField, Button, Paper } from '@material-ui/core';
+import { TextField, Button, Paper } from "@material-ui/core";
 import axios from "axios";
-import logo from "./litefriend.png"
+import logo from "./litefriend.png";
 const useStyles = makeStyles((theme) => ({
   formLogin: {
     display: "flex",
     flexDirection: "column",
     padding: "10%",
-    paddingBottom: 10
+    paddingBottom: 10,
   },
   formInput: {
     margin: "5px 0px",
@@ -31,44 +30,42 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: " #1877f2",
     fontWeight: "bold",
     color: "white",
-    transitionDelay: '0.2s',
+    transitionDelay: "0.2s",
     "&:hover": {
       backgroundColor: "#1852f2f2",
     },
-  }
+  },
 }));
 const schema = Yup.object().shape({
   name: Yup.string()
-    .matches(/^(?!admin\b)/i, 'admin is not a valid user name')
+    .matches(/^(?!admin\b)/i, "admin is not a valid user name")
     .min(2, "Mininum 2 characters")
     .max(15, " Maximum 15 charaters")
     .required(),
-  email: Yup.string()
-    .email("Invalid email format")
-    .required(),
-  password: Yup.string()
-    .min(8, "Mininum 8 charaters")
-    .required(),
+  email: Yup.string().email("Invalid email format").required(),
+  password: Yup.string().min(8, "Mininum 8 charaters").required(),
   confirm_password: Yup.string()
     .oneOf([Yup.ref("password")], "Password's not match")
     .required("Confirm password is require !"),
-})
+});
 export default function Login() {
   const classes = useStyles();
-  const [error, setError] = useState("")
+  const [error, setError] = useState("");
   const { register, handleSubmit, errors, reset } = useForm({
-    resolver: yupResolver(schema)
+    resolver: yupResolver(schema),
   });
   const onSubmit = async (e) => {
-    setError({})
-    const { data } = await axios.post("https://lite-friend.herokuapp.com/api/auth/register", e)
+    setError({});
+    const { data } = await axios.post(
+      "https://lite-friend-server.onrender.com/api/auth/register",
+      e
+    );
     if (data.success) {
       window.location.href = "/login";
       reset();
     } else {
-      setError(data.error)
+      setError(data.error);
     }
-
   };
 
   return (
@@ -83,7 +80,9 @@ export default function Login() {
           name="name"
           margin="normal"
           error={errors.name || error.name ? true : false ? true : false}
-          helperText={errors.name ? errors.name.message : error.name ? error.name : ""}
+          helperText={
+            errors.name ? errors.name.message : error.name ? error.name : ""
+          }
         />
         <TextField
           label="Enter email..."
@@ -93,7 +92,9 @@ export default function Login() {
           name="email"
           margin="normal"
           error={errors.email || error.email ? true : false ? true : false}
-          helperText={errors.email ? errors.email.message : error.email ? error.email : ""}
+          helperText={
+            errors.email ? errors.email.message : error.email ? error.email : ""
+          }
         />
         <TextField
           label="Password"
@@ -113,25 +114,21 @@ export default function Login() {
           name="confirm_password"
           margin="normal"
           error={errors.confirm_password ? true : false}
-          helperText={errors.confirm_password ? errors.confirm_password.message : ""}
+          helperText={
+            errors.confirm_password ? errors.confirm_password.message : ""
+          }
         />
-        <Button type="submit"
-          variant="contained"
-          className={classes.button}
-        >
+        <Button type="submit" variant="contained" className={classes.button}>
           Send
-         </Button>
+        </Button>
       </form>
-      <Link className={classes.signIn}
-        to="/login"
-      >
+      <Link className={classes.signIn} to="/login">
         If you have an account? Sign in
-        </Link>
+      </Link>
     </Paper>
   );
 }
 //const logo = "https://static.xx.fbcdn.net/rsrc.php/y8/r/dF5SId3UHWd.svg";
-
 
 // import React from "react";
 

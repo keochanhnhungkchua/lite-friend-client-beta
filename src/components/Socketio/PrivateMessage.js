@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useForm } from "react-hook-form";
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from "@material-ui/core/styles";
 import { useRecoilValue } from "recoil";
 import MultiImageInput from "react-multiple-image-input";
-import moment from "moment"
+import moment from "moment";
 import {
   Paper,
   TextField,
@@ -18,9 +18,13 @@ import {
 } from "@material-ui/core";
 import { PhotoCamera, Send, ArrowBack } from "@material-ui/icons/";
 import { isMeRecoil } from "../Data/data";
-import { joinRoom, leaveRoom, privateMessageSocketio, socket } from "../Data/socketio";
-import { uploadImage } from "../Data/api"
-
+import {
+  joinRoom,
+  leaveRoom,
+  privateMessageSocketio,
+  socket,
+} from "../Data/socketio";
+import { uploadImage } from "../Data/api";
 
 const useStyles = makeStyles((theme) => ({
   header: {
@@ -34,11 +38,11 @@ const useStyles = makeStyles((theme) => ({
     position: "fixed",
     width: "100%",
     fontWeight: "bold",
-    zIndex: 1
+    zIndex: 1,
   },
   userOnline: {
     color: "greenyellow",
-    fontSize: "x-large"
+    fontSize: "x-large",
   },
   listChat: {
     padding: "40px 0px",
@@ -73,7 +77,7 @@ const useStyles = makeStyles((theme) => ({
     paddingLeft: 20,
     marginTop: 5,
     borderRadius: 5,
-    transitionDelay: '0.5s',
+    transitionDelay: "0.5s",
     "&:hover": {
       width: "90%",
     },
@@ -162,10 +166,13 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
   },
-
 }));
 
-export default function PrivateMessage({ roomId, handleClosePrivateMassge, userOnline }) {
+export default function PrivateMessage({
+  roomId,
+  handleClosePrivateMassge,
+  userOnline,
+}) {
   const { register, handleSubmit, reset } = useForm();
   const classes = useStyles();
   const isMe = useRecoilValue(isMeRecoil);
@@ -192,7 +199,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
   const onSubmit = async (e) => {
     setOpen(false);
     const file = Object.values(images);
-    var data = {}
+    var data = {};
     if (file.length > 0 && e.text.trim().length > 0) {
       const imgUrl = await uploadImage(file);
 
@@ -217,7 +224,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
         createBy: isMe,
       };
     } else {
-      return
+      return;
     }
     privateMessageSocketio(data);
     reset();
@@ -228,7 +235,9 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
     joinRoom(roomId);
     async function getChat() {
       try {
-        const { data } = await axios.get(`https://lite-friend.herokuapp.com/api/chat/room/${roomId}`);
+        const { data } = await axios.get(
+          `https://lite-friend-server.onrender.com/api/chat/room/${roomId}`
+        );
         let userRecive = data.users.filter((user) => user._id !== isMe._id);
         setUserRecive(userRecive[0]);
         setMassage(data.chats);
@@ -237,7 +246,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
       }
     }
     getChat();
-  }, [isMe._id, roomId]);//fix error of react hook : React Hook useEffect has a missing dependency...
+  }, [isMe._id, roomId]); //fix error of react hook : React Hook useEffect has a missing dependency...
 
   useEffect(() => {
     socket.on("privateMessageSocketio", (newMassage) => {
@@ -246,7 +255,7 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
     return () => {
       socket.off("privateMessageSocketio");
     };
-  }, [])
+  }, []);
 
   //auto scrollIntoView
   useEffect(() => {
@@ -260,18 +269,23 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
           onClick={() => {
             handleClosePrivateMassge();
             leaveRoom(roomId);
-          }}>
+          }}
+        >
           <ArrowBack />
-          <div className={
-            userOnline.findIndex((id) =>
-              userRecive._id === id) >= 0 ?
-              classes.userOnline : ""}>
-            {userRecive.name}</div>
+          <div
+            className={
+              userOnline.findIndex((id) => userRecive._id === id) >= 0
+                ? classes.userOnline
+                : ""
+            }
+          >
+            {userRecive.name}
+          </div>
           <div></div>
         </div>
         <List className={classes.listChat}>
           {massage.map(({ text, createBy, imgUrl, createdAt, _id }, index) => (
-            <React.Fragment key={_id ? _id : index} >
+            <React.Fragment key={_id ? _id : index}>
               <ListItem
                 className={createBy._id !== isMe._id ? "" : classes.isMe}
                 button
@@ -282,23 +296,25 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
                     alt="reciver avatar"
                     src={createBy.avatar}
                   />
-                ) : (" ")}
+                ) : (
+                  " "
+                )}
                 <Paper
                   className={
-                    createBy._id !== isMe._id ? classes.textReciver : classes.textIsMe
+                    createBy._id !== isMe._id
+                      ? classes.textReciver
+                      : classes.textIsMe
                   }
                 >
-
                   <Tooltip
-
                     onClose={handleTooltipClose}
                     open={openLightTooltip === index ? true : false}
                     title={moment(createdAt).fromNow()}
-
                   >
-                    <ListItemText onClick={() => handleTooltipOpen(index)}>{text}</ListItemText>
+                    <ListItemText onClick={() => handleTooltipOpen(index)}>
+                      {text}
+                    </ListItemText>
                   </Tooltip>
-
                 </Paper>
               </ListItem>
               {imgUrl ? (
@@ -312,16 +328,13 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
                   }
                 />
               ) : (
-                  ""
-                )}
-
+                ""
+              )}
             </React.Fragment>
-
           ))}
           <div ref={messagesEndRef} />
         </List>
-        <form className={classes.form}
-          onSubmit={handleSubmit(onSubmit)} >
+        <form className={classes.form} onSubmit={handleSubmit(onSubmit)}>
           <label htmlFor="demo">
             <PhotoCamera
               className={classes.button}
@@ -350,7 +363,10 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
         open={open}
         fullScreen={true}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className={classes.formUploadImg}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className={classes.formUploadImg}
+        >
           <div className={classes.formUploadImgHeader}>
             <div
               onClick={handleClickCloseUploadImage}
@@ -360,7 +376,11 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
               <ArrowBack />
               Go Back
             </div>
-            <input type="submit" className={classes.formUploadImgSumit} value="Send" />
+            <input
+              type="submit"
+              className={classes.formUploadImgSumit}
+              value="Send"
+            />
           </div>
           <textarea
             type="textArea"
@@ -377,7 +397,11 @@ export default function PrivateMessage({ roomId, handleClosePrivateMassge, userO
             allowCrop={false}
             theme="light"
           />
-          <input type="submit" className={classes.formUploadImgButoon} value="Send" />
+          <input
+            type="submit"
+            className={classes.formUploadImgButoon}
+            value="Send"
+          />
         </form>
       </Dialog>
     </div>

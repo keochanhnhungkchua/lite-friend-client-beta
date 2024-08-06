@@ -22,7 +22,6 @@ import {
 import PrivateMessage from "./PrivateMessage";
 import { isMeRecoil, notificationsRecoil } from "../Data/data";
 
-
 const theme = unstable_createMuiStrictModeTheme();
 
 const StyledBadge = withStyles((theme) => ({
@@ -52,7 +51,6 @@ const StyledBadge = withStyles((theme) => ({
       opacity: 0,
     },
   },
-
 }))(Badge);
 
 const useStyles = makeStyles((theme) => ({
@@ -76,36 +74,36 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     wordBreak: "break-word",
     fontWeight: "bold !important",
-    color: "black !important"
+    color: "black !important",
   },
   dialog: {
     margin: 0,
     width: "100%",
     height: "inherit",
   },
-
 }));
 
 export default function Inbox({ userOnline }) {
   const classes = useStyles();
   const isMe = useRecoilValue(isMeRecoil);
   const [room, setRoom] = useState([]);
-  const [notifications, setNotifications] = useRecoilState(notificationsRecoil)
+  const [notifications, setNotifications] = useRecoilState(notificationsRecoil);
   useEffect(() => {
-    let isSubscribed = true
+    let isSubscribed = true;
     async function getRoom() {
       try {
-        const { data } = await axios.get("https://lite-friend.herokuapp.com/api/chat/room/");
+        const { data } = await axios.get(
+          "https://lite-friend-server.onrender.com/api/chat/room/"
+        );
         if (isSubscribed) {
           setRoom(data);
         }
-
       } catch (error) {
         console.error(error);
       }
     }
     getRoom();
-    return () => isSubscribed = false
+    return () => (isSubscribed = false);
   }, []);
 
   const [open, setOpen] = useState(false);
@@ -113,9 +111,11 @@ export default function Inbox({ userOnline }) {
 
   const handleOpenPrivateMassge = async (idRoomChat) => {
     setRoomId(idRoomChat);
-    if (notifications.some(x => x === idRoomChat)) {
-      const { data } = await axios.get(`https://lite-friend.herokuapp.com/api/chat/notifications/${idRoomChat}`);
-      setNotifications(data)
+    if (notifications.some((x) => x === idRoomChat)) {
+      const { data } = await axios.get(
+        `https://lite-friend-server.onrender.com/api/chat/notifications/${idRoomChat}`
+      );
+      setNotifications(data);
     }
     setOpen(true);
   };
@@ -127,58 +127,62 @@ export default function Inbox({ userOnline }) {
     <ThemeProvider theme={theme}>
       <React.Fragment>
         <CssBaseline />
-        <Paper square className={classes.paper} elevation={0} >
+        <Paper square className={classes.paper} elevation={0}>
           <List>
             {room.length !== 0
               ? room.map(({ _id, users, chats }) => {
-                const { text } = chats.length > 0 ? chats.pop() : "";
+                  const { text } = chats.length > 0 ? chats.pop() : "";
 
-                const userReceive = users.filter(
-                  (user) => user._id !== isMe._id
-                );
-                return (
-                  <React.Fragment key={_id}>
-                    <ListItem
-                      button
-                      className={classes.listItem}
-                      onClick={() =>
-                        handleOpenPrivateMassge(_id)
-                      }
-                    >
-                      <ListItemAvatar>
-                        {userOnline.some(x => x === userReceive[0]._id) ? (
-                          <StyledBadge
-                            overlap="circle"
-                            anchorOrigin={{
-                              vertical: "bottom",
-                              horizontal: "right",
-                            }}
-                            variant="dot"
-                          >
-                            <Avatar
-                              alt="Profile Picture"
-                              src={userReceive[0].avatar}
-                            />
-                          </StyledBadge>
-                        ) : (
+                  const userReceive = users.filter(
+                    (user) => user._id !== isMe._id
+                  );
+                  return (
+                    <React.Fragment key={_id}>
+                      <ListItem
+                        button
+                        className={classes.listItem}
+                        onClick={() => handleOpenPrivateMassge(_id)}
+                      >
+                        <ListItemAvatar>
+                          {userOnline.some((x) => x === userReceive[0]._id) ? (
+                            <StyledBadge
+                              overlap="circle"
+                              anchorOrigin={{
+                                vertical: "bottom",
+                                horizontal: "right",
+                              }}
+                              variant="dot"
+                            >
+                              <Avatar
+                                alt="Profile Picture"
+                                src={userReceive[0].avatar}
+                              />
+                            </StyledBadge>
+                          ) : (
                             <Avatar
                               alt="Profile Picture"
                               src={userReceive[0] ? userReceive[0].avatar : ""}
                             />
                           )}
-                      </ListItemAvatar>
-                      <div
-
-                      >
-                        <div style={{ fontWeight: "bold" }}>{userReceive[0] ? userReceive[0].name : ""} </div>
-                        <div className={notifications.indexOf(_id) < 0 ?
-                          classes.notifications :
-                          classes.notificationsOn}>{text} </div>
-                      </div>
-                    </ListItem>
-                  </React.Fragment>
-                );
-              })
+                        </ListItemAvatar>
+                        <div>
+                          <div style={{ fontWeight: "bold" }}>
+                            {userReceive[0] ? userReceive[0].name : ""}{" "}
+                          </div>
+                          <div
+                            className={
+                              notifications.indexOf(_id) < 0
+                                ? classes.notifications
+                                : classes.notificationsOn
+                            }
+                          >
+                            {text}{" "}
+                          </div>
+                        </div>
+                      </ListItem>
+                    </React.Fragment>
+                  );
+                })
               : ""}
           </List>
         </Paper>

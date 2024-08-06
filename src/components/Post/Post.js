@@ -7,21 +7,22 @@ import moment from "moment";
 
 import { makeStyles } from "@material-ui/core/styles";
 import {
-  Card, Menu,
+  Card,
+  Menu,
   MenuItem,
   CardHeader,
   Collapse,
   Avatar,
   Button,
   Dialog,
-  TextField
+  TextField,
 } from "@material-ui/core";
 import {
   MoreHoriz,
   ThumbUpOutlined,
   ChatBubbleOutlineOutlined,
   ShareOutlined,
-  ThumbUpAltSharp
+  ThumbUpAltSharp,
 } from "@material-ui/icons";
 import Photos from "./Photo";
 import Comment from "./Comment";
@@ -37,14 +38,14 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     "&:hover": {
       backgroundColor: "#aaaaaa38",
-      borderRadius: 30
-    }
+      borderRadius: 30,
+    },
   },
   Post__title: {
     fontWeight: "bold",
   },
   Post_text: {
-    padding: "0px 10px"
+    padding: "0px 10px",
   },
   Post_text_text: {
     display: "-webkit-box",
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   Post_text_seeMore: {
     fontWeight: "bold",
     cursor: "pointer",
-    marginBottom: 5
+    marginBottom: 5,
   },
   Post_actionInfo: {
     display: "flex",
@@ -79,25 +80,25 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
   },
   featureNotYet: {
-    textDecoration: "line-through"
+    textDecoration: "line-through",
   },
   //edit posts
   editPost_button: {
-    display: "flex"
+    display: "flex",
   },
   editPost_button_textField: {
     width: "-webkit-fill-available",
-    margin: 8
+    margin: 8,
   },
   editPost_button_button: {
     width: "48%",
     margin: 5,
     backgroundColor: "#2141b1",
     color: "white",
-    '&:hover': {
-      backgroundColor: '#0629a2',
-    }
-  }
+    "&:hover": {
+      backgroundColor: "#0629a2",
+    },
+  },
 }));
 
 export default function Post({ post }) {
@@ -109,10 +110,10 @@ export default function Post({ post }) {
   const time = moment(post.createdAt).fromNow();
 
   const [text, setText] = useState("");
-  const [editPost, setEditPost] = useState(false);//set open close edit post
-  const [openComment, setOpenComment] = useState(false);// set open close comment
-  const [showText, setShowText] = useState(false);// set view see more text in post
-  const [deletePost, setDeletePost] = useState(false);// set open close delete post
+  const [editPost, setEditPost] = useState(false); //set open close edit post
+  const [openComment, setOpenComment] = useState(false); // set open close comment
+  const [showText, setShowText] = useState(false); // set view see more text in post
+  const [deletePost, setDeletePost] = useState(false); // set open close delete post
 
   const handleClick = (event) => {
     if (isMeId === post.user._id) {
@@ -125,7 +126,7 @@ export default function Post({ post }) {
   };
   const likeAndUnlike = async () => {
     const { data } = await axios.get(
-      `https://lite-friend.herokuapp.com/api/post/${post._id}/like/`
+      `https://lite-friend-server.onrender.com/api/post/${post._id}/like/`
     );
     const index = like.findIndex((like) => like._id === post._id);
     const newLike = [...like];
@@ -137,11 +138,11 @@ export default function Post({ post }) {
     setDeletePost(false);
     try {
       const { data } = await axios.delete(
-        `https://lite-friend.herokuapp.com/api/post/${post._id}/`
+        `https://lite-friend-server.onrender.com/api/post/${post._id}/`
       );
       if (data.success) {
         const result = like.filter((item) => item._id !== post._id);
-        setLike(result)
+        setLike(result);
       }
     } catch (error) {
       console.log(error);
@@ -154,10 +155,11 @@ export default function Post({ post }) {
     setEditPost(true);
   };
   const editPostFunction = async (e) => {
-    setText(e.text)
+    setText(e.text);
     try {
       const { data } = await axios.put(
-        `https://lite-friend.herokuapp.com/api/post/${post._id}/`, e
+        `https://lite-friend-server.onrender.com/api/post/${post._id}/`,
+        e
       );
       if (data.success) {
         const index = like.findIndex((like) => like._id === post._id);
@@ -168,24 +170,20 @@ export default function Post({ post }) {
     } catch (error) {
       console.log(error);
     }
-    reset()
+    reset();
     setEditPost(false);
   };
-
 
   return (
     <Card className={classes.Post}>
       <CardHeader
         classes={{
           title: classes.Post__title,
-          action: classes.Post__action
+          action: classes.Post__action,
         }}
         avatar={
           <Link to={`/profile/${post.user._id}`}>
-            <Avatar
-              aria-label="avatar"
-              src={post.user.avatar}
-            />
+            <Avatar aria-label="avatar" src={post.user.avatar} />
           </Link>
         }
         action={<MoreHoriz onClick={handleClick} />}
@@ -200,18 +198,24 @@ export default function Post({ post }) {
       >
         <MenuItem onClick={openEditPost}>Edit post </MenuItem>
         <MenuItem onClick={deletePostFunciton}>Delete post</MenuItem>
-        <MenuItem onClick={handleClose}
-          className={classes.featureNotYet}>
+        <MenuItem onClick={handleClose} className={classes.featureNotYet}>
           Save link
-           </MenuItem>
-        <MenuItem onClick={handleClose} className={classes.featureNotYet}>Hide from profile</MenuItem>
-        <MenuItem onClick={handleClose} className={classes.featureNotYet}>View edit history</MenuItem>
-        <MenuItem onClick={handleClose} className={classes.featureNotYet}>Edit Privacy</MenuItem>
+        </MenuItem>
+        <MenuItem onClick={handleClose} className={classes.featureNotYet}>
+          Hide from profile
+        </MenuItem>
+        <MenuItem onClick={handleClose} className={classes.featureNotYet}>
+          View edit history
+        </MenuItem>
+        <MenuItem onClick={handleClose} className={classes.featureNotYet}>
+          Edit Privacy
+        </MenuItem>
         <MenuItem onClick={handleClose} className={classes.featureNotYet}>
           Turn on notifications for this post
         </MenuItem>
       </Menu>
-      <Dialog onClose={() => setEditPost(false)}
+      <Dialog
+        onClose={() => setEditPost(false)}
         aria-labelledby="edit post"
         open={editPost}
         fullWidth={true}
@@ -233,21 +237,22 @@ export default function Post({ post }) {
             onChange={(e) => setText(e.text)}
           />
           <div className={classes.editPost_button}>
-            <Button
-              className={classes.editPost_button_button}
-              type="submit">
+            <Button className={classes.editPost_button_button} type="submit">
               Update
             </Button>
             <Button
               className={classes.editPost_button_button}
-              onClick={() => setEditPost(false)}>
+              onClick={() => setEditPost(false)}
+            >
               Cancel
-              </Button>
+            </Button>
           </div>
         </form>
       </Dialog>
       <div className={classes.Post_text}>
-        <div className={showText ? "" : classes.Post_text_text}>{post.text}</div>
+        <div className={showText ? "" : classes.Post_text_text}>
+          {post.text}
+        </div>
         <Collapse
           in={post.text.length > 100 ? !showText : false}
           timeout={1}
@@ -271,11 +276,11 @@ export default function Post({ post }) {
               <ThumbUpAltSharp /> Like{" "}
             </div>
           ) : (
-              <div className={classes.Post_action_icon}>
-                {" "}
-                <ThumbUpOutlined /> Like{" "}
-              </div>
-            )}
+            <div className={classes.Post_action_icon}>
+              {" "}
+              <ThumbUpOutlined /> Like{" "}
+            </div>
+          )}
         </span>
         <span
           className={classes.Post_action_icon}
